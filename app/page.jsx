@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation';
 import { initDb } from '@/lib/mongoDb';
 import LandingPage from '@/components/landing/LandingPage';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Stock Easy — Smart Pharmacy Stock Management',
   description: 'Eliminate medicine expiry waste with FEFO billing, AI insights, and real-time analytics.',
