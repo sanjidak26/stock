@@ -1,0 +1,109 @@
+.billingGrid {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 20px;
+  align-items: start;
+}
+
+.searchWrap { position: relative; }
+.searchIco {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); pointer-events: none;
+}
+.searchInput { padding-left: 40px !important; }
+
+.dropdown {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  z-index: 50;
+  box-shadow: var(--shadow-lg);
+  max-height: 260px; overflow-y: auto;
+}
+.dropItem {
+  width: 100%;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px;
+  background: none; border: none;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+  text-align: left;
+}
+.dropItem:last-child { border-bottom: none; }
+.dropItem:hover { background: var(--bg-hover); }
+.dropName { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.dropMeta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+.batchList { display: flex; flex-direction: column; gap: 8px; }
+.batchRow {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--bg-hover);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  gap: 10px;
+}
+.fefoFirst {
+  border-color: rgba(6,182,212,0.35);
+  background: rgba(6,182,212,0.06);
+}
+.fefoTag {
+  display: inline-block;
+  font-size: 10px; font-weight: 700;
+  color: var(--cyan);
+  background: var(--cyan-glow);
+  border-radius: 4px;
+  padding: 1px 6px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.customerRow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+
+.cartItems { display: flex; flex-direction: column; gap: 8px; }
+.cartRow {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg-hover);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+.cartQty {
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0;
+}
+.qtyBtn {
+  width: 26px; height: 26px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 16px;
+  transition: all var(--transition);
+}
+.qtyBtn:hover { background: var(--border); }
+.removeBtn {
+  background: none; border: none;
+  color: var(--text-muted); cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color var(--transition);
+}
+.removeBtn:hover { color: var(--red); }
+
+.totals { display: flex; flex-direction: column; gap: 8px; }
+.totalRow {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 14px;
+}
+.netRow { font-size: 18px; font-weight: 700; color: var(--cyan); }
+.discountInput { width: 100px; padding: 6px 10px !important; text-align: right; }
+
+@media (max-width: 900px) {
+  .billingGrid { grid-template-columns: 1fr; }
+  .customerRow { grid-template-columns: 1fr; }
+}

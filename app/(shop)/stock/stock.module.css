@@ -1,0 +1,31 @@
+.filters {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.filterBtn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 500;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.filterBtn:hover { border-color: var(--border-light); color: var(--text-primary); }
+.filterActive {
+  background: var(--cyan-glow);
+  border-color: rgba(6,182,212,0.3);
+  color: var(--cyan);
+}
+
+.searchBar {
+  position: relative;
+  margin-bottom: 16px;
+}
+.searchIcon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); pointer-events: none;
+}
+.searchInput { padding-left: 42px !important; }

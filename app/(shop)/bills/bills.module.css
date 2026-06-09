@@ -1,0 +1,24 @@
+.searchBar { position: relative; margin-bottom: 16px; }
+.searchIco { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+.searchInput { padding-left: 44px !important; }
+
+.grid { display: grid; grid-template-columns: 1fr 380px; gap: 20px; align-items: start; }
+
+.selectedRow td { background: var(--cyan-glow) !important; }
+
+.detailMeta, .detailTotals { display: flex; flex-direction: column; gap: 6px; }
+.metaRow { display: flex; justify-content: space-between; font-size: 13px; }
+.metaRow span:first-child { color: var(--text-secondary); }
+.netTotal { font-size: 16px; font-weight: 700; color: var(--cyan); }
+
+.itemList { display: flex; flex-direction: column; gap: 8px; }
+.item {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 10px 12px;
+  background: var(--bg-hover);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  gap: 12px;
+}
+
+@media (max-width: 1000px) { .grid { grid-template-columns: 1fr; } }
