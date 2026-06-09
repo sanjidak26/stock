@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { ChevronLeft, Plus, Package, Save } from 'lucide-react';
 import Link from 'next/link';
@@ -9,18 +9,19 @@ import styles from './add.module.css';
 const CATEGORIES = ['Antibiotic', 'Analgesic', 'Antacid', 'Antifungal', 'Antiviral', 'Vitamin', 'Cardiac', 'Diabetic', 'Dermatology', 'Other'];
 const UNITS = ['tablet', 'capsule', 'strip', 'syrup', 'injection', 'cream', 'drops', 'inhaler', 'powder', 'ml'];
 
-export default function AddStockPage() {
+function AddStockContent() {
   const router = useRouter();
   const sp = useSearchParams();
   const prefillMedId = sp.get('medicineId');
   const prefillMedName = sp.get('medicineName');
 
-  const [tab, setTab] = useState(prefillMedId ? 'batch' : 'medicine');
+  const [tab, setTab] = useState(() => (prefillMedId ? 'batch' : 'medicine'));
   const [medicines, setMedicines] = useState([]);
   const [dealers, setDealers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
+  const timeoutRef = useRef();
 
   // Medicine form
   const [medForm, setMedForm] = useState({ name: '', genericName: '', category: '', unit: 'tablet' });
@@ -36,49 +37,109 @@ export default function AddStockPage() {
   });
 
   useEffect(() => {
-    fetch('/api/medicines').then(r => r.json()).then(d => setMedicines(Array.isArray(d) ? d : []));
-    fetch('/api/dealers').then(r => r.json()).then(d => setDealers(Array.isArray(d) ? d : []));
+    let active = true;
+    async function load() {
+      try {
+        const [medRes, dealerRes] = await Promise.all([
+          fetch('/api/medicines'),
+          fetch('/api/dealers'),
+        ]);
+        const medData = await medRes.json();
+        const dealerData = await dealerRes.json();
+        if (!active) return;
+        setMedicines(Array.isArray(medData) ? medData : []);
+        setDealers(Array.isArray(dealerData) ? dealerData : []);
+      } catch (err) {
+        if (!active) return;
+        setError('Unable to load medicines or dealers.');
+      }
+    }
+    load();
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    return () => clearTimeout(timeoutRef.current);
   }, []);
 
   async function saveMedicine(e) {
     e.preventDefault();
-    setLoading(true); setError(''); setSuccess('');
-    const res = await fetch('/api/medicines', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(medForm),
-    });
-    const data = await res.json();
-    setLoading(false);
-    if (!res.ok) { setError(data.error); return; }
-    setSuccess('Medicine added! Now add a batch.');
-    const updated = await fetch('/api/medicines').then(r => r.json());
-    setMedicines(Array.isArray(updated) ? updated : []);
-    setBatchForm(f => ({ ...f, medicineId: String(data.id) }));
-    setMedForm({ name: '', genericName: '', category: '', unit: 'tablet' });
-    setTab('batch');
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const res = await fetch('/api/medicines', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(medForm),
+      });
+
+      const data = await res.json();
+      setLoading(false);
+
+      if (!res.ok) {
+        setError(data?.error || 'Failed to save medicine.');
+        return;
+      }
+
+      setSuccess('Medicine added! Now add a batch.');
+      const updated = await fetch('/api/medicines');
+      const updatedData = await updated.json();
+      setMedicines(Array.isArray(updatedData) ? updatedData : []);
+      setBatchForm((f) => ({ ...f, medicineId: String(data.id) }));
+      setMedForm({ name: '', genericName: '', category: '', unit: 'tablet' });
+      setTab('batch');
+    } catch (err) {
+      setLoading(false);
+      setError('Unable to save medicine. Please try again.');
+    }
   }
 
   async function saveBatch(e) {
     e.preventDefault();
-    setLoading(true); setError(''); setSuccess('');
-    const res = await fetch('/api/batches', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        medicineId: batchForm.medicineId,
-        dealerId: batchForm.dealerId || null,
-        batchNo: batchForm.batchNo,
-        expiryDate: batchForm.expiryDate,
-        quantity: Number(batchForm.quantity),
-        purchasePrice: Number(batchForm.purchasePrice),
-        sellingPrice: Number(batchForm.sellingPrice),
-      }),
-    });
-    const data = await res.json();
-    setLoading(false);
-    if (!res.ok) { setError(data.error); return; }
-    setSuccess('✓ Batch added successfully!');
-    setBatchForm(f => ({ ...f, batchNo: '', expiryDate: '', quantity: '', purchasePrice: '', sellingPrice: '' }));
-    setTimeout(() => router.push('/stock'), 1200);
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const res = await fetch('/api/batches', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          medicineId: batchForm.medicineId,
+          dealerId: batchForm.dealerId || null,
+          batchNo: batchForm.batchNo,
+          expiryDate: batchForm.expiryDate,
+          quantity: Number(batchForm.quantity),
+          purchasePrice: Number(batchForm.purchasePrice),
+          sellingPrice: Number(batchForm.sellingPrice),
+        }),
+      });
+
+      const data = await res.json();
+      setLoading(false);
+
+      if (!res.ok) {
+        setError(data?.error || 'Failed to save batch.');
+        return;
+      }
+
+      setSuccess('✓ Batch added successfully!');
+      setBatchForm((f) => ({
+        ...f,
+        batchNo: '',
+        expiryDate: '',
+        quantity: '',
+        purchasePrice: '',
+        sellingPrice: '',
+      }));
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => router.push('/stock'), 1200);
+    } catch (err) {
+      setLoading(false);
+      setError('Unable to save batch. Please try again.');
+    }
   }
 
   const setM = k => e => setMedForm(f => ({ ...f, [k]: e.target.value }));
@@ -148,7 +209,7 @@ export default function AddStockPage() {
       {tab === 'batch' && (
         <div className="card" style={{ maxWidth: 600 }}>
           <h2 style={{ fontSize: 17, fontWeight: 700, marginBottom: 20 }}>Add Batch</h2>
-          {prefillMedName && (
+          {prefillMedName && tab === 'batch' && (
             <div className="alert alert-info" style={{ marginBottom: 16 }}>
               Adding batch for: <strong>{prefillMedName}</strong>
             </div>
@@ -199,5 +260,18 @@ export default function AddStockPage() {
         </div>
       )}
     </div>
+  );
+}
+export default function AddStockPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="loading-center">
+          <div className="spinner" />
+        </div>
+      }
+    >
+      <AddStockContent />
+    </Suspense>
   );
 }
