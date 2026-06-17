@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { ShieldCheck, X, Check, Clock, ChevronDown } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
+import { ShieldCheck, X, Check, Clock } from 'lucide-react';
 import styles from './verifications.module.css';
 
 export default function VerificationsPage() {
@@ -11,10 +11,15 @@ export default function VerificationsPage() {
   const [rejectReason, setRejectReason] = useState('');
   const [showReject, setShowReject] = useState(null);
   const [filter, setFilter] = useState('pending');
+  const [actionError, setActionError] = useState('');
+  const [actionSuccess, setActionSuccess] = useState('');
+  const filterRef = useRef(filter);
+  filterRef.current = filter;
 
-  async function load() {
+  async function load(overrideFilter) {
+    const statusFilter = overrideFilter ?? filterRef.current;
     setLoading(true);
-    const res = await fetch(`/api/shops?status=${filter}`);
+    const res = await fetch(`/api/shops?status=${statusFilter}`);
     const data = await res.json();
     setShops(Array.isArray(data) ? data : []);
     setLoading(false);
@@ -24,22 +29,53 @@ export default function VerificationsPage() {
 
   async function approve(shopId) {
     setActionId(shopId);
-    await fetch('/api/admin/verify', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ shopId, action: 'approve' }),
-    });
+    setActionError('');
+    setActionSuccess('');
+    try {
+      const res = await fetch('/api/admin/verify', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ shopId, action: 'approve' }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setActionError(data?.error || 'Failed to approve. Please try again.');
+        setActionId(null);
+        return;
+      }
+      setActionSuccess('✓ Shop approved successfully!');
+      // Switch to approved tab so user can see it moved there
+      setFilter('approved');
+      await load('approved');
+    } catch (err) {
+      setActionError('Network error. Please try again.');
+    }
     setActionId(null);
-    load();
   }
 
   async function reject(shopId) {
     setActionId(shopId);
-    await fetch('/api/admin/verify', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ shopId, action: 'reject', reason: rejectReason || 'Not approved by admin' }),
-    });
-    setActionId(null); setShowReject(null); setRejectReason('');
-    load();
+    setActionError('');
+    setActionSuccess('');
+    try {
+      const res = await fetch('/api/admin/verify', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ shopId, action: 'reject', reason: rejectReason || 'Not approved by admin' }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setActionError(data?.error || 'Failed to reject. Please try again.');
+        setActionId(null);
+        return;
+      }
+      setActionSuccess('Shop rejected.');
+      setShowReject(null);
+      setRejectReason('');
+      setFilter('rejected');
+      await load('rejected');
+    } catch (err) {
+      setActionError('Network error. Please try again.');
+    }
+    setActionId(null);
   }
 
   function formatDate(d) {
@@ -67,6 +103,13 @@ export default function VerificationsPage() {
           </button>
         ))}
       </div>
+
+      {actionError && (
+        <div className="alert alert-error" style={{ marginBottom: 16 }}>{actionError}</div>
+      )}
+      {actionSuccess && (
+        <div className="alert alert-success" style={{ marginBottom: 16 }}>{actionSuccess}</div>
+      )}
 
       {loading ? (
         <div className="loading-center"><div className="spinner" /></div>

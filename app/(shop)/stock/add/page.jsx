@@ -219,14 +219,14 @@ function AddStockContent() {
               <label className="form-label">Medicine *</label>
               <select className="form-select" value={batchForm.medicineId} onChange={setB('medicineId')} required id="batch-medicine">
                 <option value="">Select medicine…</option>
-                {medicines.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
+                {medicines.map(m => <option key={m.id} value={String(m.id)}>{m.name}</option>)}
               </select>
             </div>
             <div className="form-group">
               <label className="form-label">Dealer / Supplier</label>
               <select className="form-select" value={batchForm.dealerId} onChange={setB('dealerId')} id="batch-dealer">
                 <option value="">None</option>
-                {dealers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                {dealers.map(d => <option key={d.id} value={String(d.id)}>{d.name}</option>)}
               </select>
             </div>
             <div className={styles.row2}>
