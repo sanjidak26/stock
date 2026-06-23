@@ -1,36 +1,219 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💊 StockEasy - Pharmacy Stock Management System
 
-## Getting Started
+StockEasy is a modern full-stack pharmacy management platform built with **Next.js** and **MongoDB**. It enables pharmacy owners to efficiently manage inventory, billing, expiry tracking, analytics, and daily operations through a centralized dashboard, while administrators can oversee shop verification and platform activity.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+### 🏪 Pharmacy Management
+- Pharmacy registration and onboarding
+- Secure role-based authentication
+- Inventory management with medicine and batch tracking
+- Dealer management
+- Billing and invoice generation
+- Revenue and sales analytics
+
+### 📦 Smart Inventory Control
+- Batch-wise stock management
+- FEFO (First Expiry, First Out) billing strategy
+- Near-expiry medicine tracking
+- Dead stock identification
+- Low-stock alerts
+- Out-of-stock notifications
+
+### 📊 Analytics Dashboard
+- Revenue insights
+- Sales trends and performance metrics
+- Inventory health monitoring
+- Business intelligence reports
+
+### 🤖 AI-Powered Assistant
+- Natural language business queries
+- Inventory insights
+- Sales and stock analysis
+- Quick operational assistance
+
+### 👨‍💼 Admin Panel
+- Pharmacy verification workflow
+- Shop approval and monitoring
+- Platform-wide analytics
+- User and shop management
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- Next.js (App Router)
+- React
+- CSS Modules
+- Lucide React Icons
+
+### Backend
+- Next.js API Routes
+- MongoDB Atlas
+
+### Authentication
+- NextAuth.js
+
+### Data Visualization
+- Recharts
+
+---
+
+## 📁 Project Structure
+
+```text
+StockEasy/
+│
+├── app/
+│   ├── admin/
+│   ├── dashboard/
+│   ├── stock/
+│   ├── billing/
+│   ├── analytics/
+│   └── settings/
+│
+├── components/
+├── lib/
+├── models/
+├── scripts/
+├── public/
+└── api/
+```
+
+---
+
+## 🔐 User Roles
+
+### Central Admin
+- Verify pharmacy registrations
+- Approve or reject applications
+- Monitor platform activity
+- Access platform analytics
+
+### Shop Owner
+- Manage medicines and inventory
+- Create bills and invoices
+- Monitor sales and revenue
+- Track expiry and stock levels
+- Use AI-powered business insights
+
+---
+
+## 🔄 Workflow
+
+1. Pharmacy registration
+2. Admin verification and approval
+3. Shop owner login
+4. Add medicines and batches
+5. Manage inventory
+6. Generate bills using FEFO strategy
+7. Monitor analytics and stock health
+8. Use AI assistant for business insights
+
+---
+
+## ⚙️ Installation
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/your-username/stockeasy.git
+cd stockeasy
+```
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Configure Environment Variables
+
+Create a `.env.local` file in the project root and add the required environment variables.
+
+### Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📈 Key Functionalities
 
-To learn more about Next.js, take a look at the following resources:
+- Inventory Management
+- Batch Tracking
+- FEFO Billing
+- Expiry Monitoring
+- Low Stock Alerts
+- Revenue Analytics
+- Dealer Management
+- Pharmacy Verification
+- AI Business Assistant
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🚀 Deployment
 
-## Deploy on Vercel
+The application can be deployed on:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Vercel
+- Render
+- Railway
+- VPS / Cloud Servers
+- Any Node.js compatible hosting platform
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ensure all required environment variables are configured in the deployment environment.
+
+---
+
+## 🔒 Security
+
+- Role-based access control
+- Secure authentication
+- Protected API routes
+- Server-side validation
+- Secure database integration
+
+---
+
+## 📸 Screenshots
+
+Add screenshots of:
+- Dashboard
+- Inventory Management
+- Billing System
+- Analytics Page
+- Admin Panel
+
+---
+
+## 🎯 Future Enhancements
+
+- Barcode scanning support
+- GST invoice generation
+- Multi-store management
+- Advanced reporting
+- Mobile application
+- Supplier order management
+
+---
+
+## 👩‍💻 Author
+
+**Sana**
+
+---
+
+## ⭐ Support
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
