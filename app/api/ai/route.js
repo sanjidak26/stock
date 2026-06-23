@@ -14,6 +14,10 @@ export async function POST(request) {
 
   try {
     const result = await runAiQuery(question, shopId);
+    if (result.outOfScope) {
+      await recordAiQuery(shopId, userId, question, 'Out of scope', 'Irrelevant question message shown');
+      return Response.json({ outOfScope: true, message: result.message });
+    }
     await recordAiQuery(shopId, userId, question, result.query, `${result.rows.length} rows returned`);
 
     return Response.json({ rows: result.rows, query: result.query, count: result.rows.length });

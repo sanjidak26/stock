@@ -84,6 +84,8 @@ export default function AiPage() {
 
     if (!res.ok) {
       setMessages(m => [...m, { role: 'ai', content: 'Sorry, I could not process that.', error: data.error }]);
+    } else if (data.outOfScope) {
+      setMessages(m => [...m, { role: 'ai', content: data.message }]);
     } else {
       const summary = data.count === 0
         ? 'No results found for that query.'
